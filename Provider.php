@@ -12,6 +12,32 @@ class Provider extends AbstractProvider
      * Unique Provider Identifier.
      */
     const IDENTIFIER = 'KEYCLOAK';
+    
+    /**
+     * Scopes defintions.
+     *
+     */
+    const SCOPE_OPENID = 'openid';
+    const SCOPE_PROFILE = 'profile';
+    const SCOPE_EMAIL = 'email';
+    const SCOPE_ADDRESS = 'address';
+    const SCOPE_PHONE = 'phone';
+    const SCOPE_OFFLINE_ACCESS = 'offline_access';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $scopes = [
+        'openid',
+        'profile',
+        'email',
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $scopeSeparator = ' ';
+    
 
     public static function additionalConfigKeys()
     {
