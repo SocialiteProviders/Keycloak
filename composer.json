@@ -1,10 +1,10 @@
 {
-    "name": "socialiteproviders/keycloak",
+    "name": "chamaabe/keycloak",
     "description": "Keycloak OAuth2 Provider for Laravel Socialite",
     "license": "MIT",
     "authors": [{
-        "name": "Oleg Kuchumov",
-        "email": "voenniy@gmail.com"
+        "name": "Chamara Abesinghe",
+        "email": "akachamara@gmail.com"
     }],
     "require": {
         "php": "^5.6 || ^7.0",
