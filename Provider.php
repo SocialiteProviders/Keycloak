@@ -23,7 +23,7 @@ class Provider extends AbstractProvider
      */
     public static function additionalConfigKeys()
     {
-        return ['base_url', 'realms'];
+        return ['base_url', 'realms', 'post_logout_redirect_uri'];
     }
 
     protected function getBaseUrl()
@@ -85,20 +85,23 @@ class Provider extends AbstractProvider
     }
 
     /**
-     * Return logout endpoint with redirect_uri query parameter.
+     * Return logout endpoint with id_token_hint and post_logout_redirect_uri query parameter.
      *
-     * @param string|null $redirectUri
+     * @param string $idTokenHint
      *
      * @return string
      */
-    public function getLogoutUrl(?string $redirectUri = null): string
+    public function getLogoutUrl(string $idTokenHint = null): string
     {
         $logoutUrl = $this->getBaseUrl().'/protocol/openid-connect/logout';
 
-        if ($redirectUri === null) {
-            return $logoutUrl;
-        }
-
-        return $logoutUrl.'?redirect_uri='.urlencode($redirectUri);
+        return $logoutUrl
+          .'?'
+          .'id_token_hint='
+          .$idTokenHint
+          .'&'
+          .'post_logout_redirect_uri='
+          .urlencode($this->getConfig('post_logout_redirect_uri'))
+          ;
     }
 }

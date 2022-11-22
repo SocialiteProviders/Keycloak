@@ -1,7 +1,10 @@
 # Keycloak
 
+Valid for Keyckloak version 19.0.0 - 20.0.3 (later versions should be checked)
+https://www.keycloak.org/docs/latest/server_admin/#rp-initiated-logout
+
 ```bash
-composer require socialiteproviders/keycloak
+composer require andreas-bochkov/laravel-socialiteprovier-keycloak
 ```
 
 ## Installation & Basic Usage
@@ -15,9 +18,10 @@ Please see the [Base Installation Guide](https://socialiteproviders.com/usage/),
   'client_id' => env('KEYCLOAK_CLIENT_ID'),
   'client_secret' => env('KEYCLOAK_CLIENT_SECRET'),
   'redirect' => env('KEYCLOAK_REDIRECT_URI'),
-  'base_url' => env('KEYCLOAK_BASE_URL'),   // Specify your keycloak server URL here
-  'realms' => env('KEYCLOAK_REALM')         // Specify your keycloak realm
-],
+  'base_url' => env('KEYCLOAK_BASE_URL'),                                 // Specify your keycloak server URL here
+  'realms' => env('KEYCLOAK_REALM'),                                      // Specify your keycloak realm
+  'post_logout_redirect_uri' => env('KEYCLOAK_POST_LOGOUT_REDIRECT_URI')  // Specify your post logout URI
+ ],
 ```
 
 ### Add provider event listener
@@ -43,26 +47,22 @@ You should now be able to use the provider like you would regularly use Socialit
 return Socialite::driver('keycloak')->redirect();
 ```
 
+In the handle method the `id_token` should be saved to be able to logout later
+
+```php
+    $oauthUser = Socialite::driver('keycloak')->user();
+    $user = User::updateOrCreate([
+      'oauth_user_id'=>$oauthUser->id
+    ], [
+      'oauth_id_token'=>$oauthUser->accessTokenResponseBody['id_token']
+    ]);
+```
+
 To logout of your app and Keycloak:
 ```php
 public function logout() {
+    $idTokenHint=Auth::user()->oauth_id_token;
     Auth::logout(); // Logout of your app
-    
-    // Keycloak v18+ does not support a redirect URL
-    return redirect(Socialite::driver('keycloak')->getLogoutUrl());
-    
-    // Keycloak before v18 does support a redirect URL
-    $redirectUri = Config::get('app.url'); // The URL the user is redirected to
-    return redirect(Socialite::driver('keycloak')->getLogoutUrl($redirectUri)); // Redirect to Keycloak
+    return redirect(Socialite::driver('keycloak')->getLogoutUrl($idTokenHint)); // Redirect to Keycloak
 }
 ```
-
-#### Keycloak <= 3.2
-
-Keycloak below v3.2 requires no scopes to be set. Later versions require the `openid` scope for all requests.
-
-```php
-return Socialite::driver('keycloak')->scopes([])->redirect();
-```
-
-See [the upgrade guide](https://www.keycloak.org/docs/12.0/upgrading/#migrating-to-3-2-0).
