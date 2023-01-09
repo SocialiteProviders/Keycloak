@@ -15,12 +15,20 @@ Please see the [Base Installation Guide](https://socialiteproviders.com/usage/),
 
 ```php
 'keycloak' => [
+  // Specify your keycloak client ID here
   'client_id' => env('KEYCLOAK_CLIENT_ID'),
+  // Specify your keycloak client secret
   'client_secret' => env('KEYCLOAK_CLIENT_SECRET'),
+  // Specify your app redirect URI
   'redirect' => env('KEYCLOAK_REDIRECT_URI'),
-  'base_url' => env('KEYCLOAK_BASE_URL'),                                 // Specify your keycloak server URL here
-  'realms' => env('KEYCLOAK_REALM'),                                      // Specify your keycloak realm
-  'post_logout_redirect_uri' => env('KEYCLOAK_POST_LOGOUT_REDIRECT_URI')  // Specify your post logout URI
+  // Specify your keycloak server URL here
+  'base_url' => env('KEYCLOAK_BASE_URL'),
+  // Specify your keycloak realm
+  'realms' => env('KEYCLOAK_REALM'),
+  // Specify your app post logout URI
+  'post_logout_redirect_uri' => env('KEYCLOAK_POST_LOGOUT_REDIRECT_URI'),
+  // Optional specify your keycloak backend URL, if differs from its base URL
+  'backend_url' => env('KEYCLOAK_BACKEND_URL')
  ],
 ```
 

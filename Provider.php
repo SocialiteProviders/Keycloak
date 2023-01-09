@@ -23,12 +23,17 @@ class Provider extends AbstractProvider
      */
     public static function additionalConfigKeys()
     {
-        return ['base_url', 'realms', 'post_logout_redirect_uri'];
+        return ['base_url', 'backend_url', 'realms', 'post_logout_redirect_uri'];
     }
 
     protected function getBaseUrl()
     {
         return rtrim(rtrim($this->getConfig('base_url'), '/').'/realms/'.$this->getConfig('realms', 'master'), '/');
+    }
+
+    protected function getBackendUrl()
+    {
+        return rtrim(rtrim($this->getConfig('backend_url', getConfig('base_url')), '/').'/realms/'.$this->getConfig('realms', 'master'), '/');
     }
 
     /**
@@ -44,7 +49,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return $this->getBaseUrl().'/protocol/openid-connect/token';
+        return $this->getBackendUrl().'/protocol/openid-connect/token';
     }
 
     /**
@@ -52,7 +57,7 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get($this->getBaseUrl().'/protocol/openid-connect/userinfo', [
+        $response = $this->getHttpClient()->get($this->getBackendUrl().'/protocol/openid-connect/userinfo', [
             RequestOptions::HEADERS => [
                 'Authorization' => 'Bearer '.$token,
             ],
