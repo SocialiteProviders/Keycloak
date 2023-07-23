@@ -23,7 +23,8 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
-        "socialiteproviders/manager": "~4.0"
+        "socialiteproviders/manager": "~4.0",
+        "firebase/php-jwt": "^6.8"
     },
     "autoload": {
         "psr-4": {
